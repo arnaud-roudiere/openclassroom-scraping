@@ -10,31 +10,28 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 
-    
-lien = "http://books.toscrape.com/" #Introduce the web address
-
-response = requests.get(lien)
-
-soup = BeautifulSoup(response.text, "html.parser")
-
-soup = soup.find(class_="nav nav-list")
-
+#On stocke les genres et leurs liens respectifs dans 2 listes 
 liste_liens            =  []
 liste_genres           =  []
+
+lien = "http://books.toscrape.com/"
+response = requests.get(lien)
+soup = BeautifulSoup(response.text, "html.parser")
+soup = soup.find(class_="nav nav-list")
+
 for link in soup.find_all('a'):
     link = link.get('href')
     if len(link) > 22 and 'books_1' not in link :
         liste_liens.append(link)
         link = (link.split("/", 3)[3]).split("_", 1)[0]
         liste_genres.append(str(link).capitalize())
-    
+
+# On itère par genre pour créer un fichier CSV pour chaque genre  
 for genre in liste_genres :
     
     # Définition des variables
-
     pages_url              =  []
     title                  =  []
-    lien_page_livre        =  []
     product_page_url       =  []
     universal_product_code =  []
     price_including_tax    =  []
@@ -46,6 +43,8 @@ for genre in liste_genres :
     image_url              =  []
     donnees                =  []
     
+    # On prépare le CSV
+    ## On définit les en-têtes
     header                 =  [
               'product_page_url',
               'universal_product_code',
@@ -61,6 +60,7 @@ for genre in liste_genres :
     
     data                   =  []
 
+    # On effectue le scraping et complétons les variables
     lien = "http://books.toscrape.com/"+liste_liens[liste_genres.index(genre)]
     response = requests.get(lien)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -76,21 +76,20 @@ for genre in liste_genres :
             lien_2 = lien.replace('index.html','page-'+str(i)+'.html')
             pages_url.append(lien_2)
             
-        # on récupère les titres
-
+    # Les titres
     for i in pages_url :
         response = requests.get(i)
         soup = BeautifulSoup(response.text, "html.parser")
        
         for link in soup.find_all('article'):
-            title.append((str(link.find('h3')).split('title=', 1)[1]).split('">', 1)[0])
+            title.append((str(link.find('h3')).split('title=', 1)[1]).split('>', 1)[0])
 
         # on récupère l'url du livre
             addresse_livre = 'http://books.toscrape.com/catalogue/'+ str(link.find('h3')).split('/',3)[3].split('"',1)[0]
             product_page_url.append(addresse_livre)
             
     
-        # on récupère le code, les prix, les stocks, la description
+        # on récupère le code, les prix, les stocks, la description, la review, le ratin et l'url de l'image
             lien = addresse_livre
             response = requests.get(lien)
             soup = BeautifulSoup(response.text, "html.parser")
@@ -104,7 +103,7 @@ for genre in liste_genres :
             number_available.append((str(soup.find_all('td')[5].string).split('(',1)[1]).replace(' available)',''))
             
             try :
-                product_description.append(((str(soup.find_all(class_='product_page')).split('<p>',1)[1]).split('</p>',1)[0]).replace('â',"'"))
+                product_description.append(((str(soup.find_all(class_='product_page')).split('<p>',1)[1]).split('</p>',1)[0]).replace(';',""))
             except: 
                 product_description.append('')
             
@@ -115,10 +114,10 @@ for genre in liste_genres :
             image_url.append("https://books.toscrape.com/" + (str(soup.find_all(class_='item active')).split('../',2)[2]).split('"/',1)[0])
         
     
-
+    # On prépare la liste des listes pour contenir les données du CSV
     for j in range(len(image_url)):
         sub_data = [
-                product_page_url[j],
+              product_page_url[j],
               universal_product_code[j],
               title[j],
               price_including_tax[j],
@@ -131,10 +130,9 @@ for genre in liste_genres :
               ]
         data.append(sub_data)
         
-    with open( genre +'.csv', 'w+', encoding='UTF8', newline='') as f:
+    # On créé un CSV par genre et on y stocke les données    
+    with open( genre +'.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(data)          
-            
-
 
