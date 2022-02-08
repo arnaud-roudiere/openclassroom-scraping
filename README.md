@@ -39,11 +39,11 @@ Once done, you can close it typing:<br>
 
 <li>Install the Python libraries</li>
 <code class="language-bash" data-lang="bash">pip install -r requirements.txt</code><br><br>
-Versions :
-python ==3.7.4
-beautifulsoup4 ==4.10.0           
-requests ==2.27.1        
-python-csv == 0.0.13 
+Versions :<br>
+python ==3.7.4<br>
+beautifulsoup4 ==4.10.0    <br>       
+requests ==2.27.1   <br>     
+python-csv == 0.0.13 <br>
 <h3>Author:</h3>
 Arnaud ROUDIERE
 <br><br>
