@@ -44,7 +44,17 @@ python ==3.7.4<br>
 beautifulsoup4 ==4.10.0    <br>       
 requests ==2.27.1   <br>     
 python-csv == 0.0.13 <br>
-urllib3 == 1.24.2 <br>
+urllib3 == 1.24.2 <br><br>
+
+<li>Launch the app</li>
+<code class="language-bash" data-lang="bash">python path/projet_1_scraping.py</code><br><br>
+
+
+<li>Modify the recipient file</li>
+You need to update the parent_dir variable with your own folder.<br>
+<code class="language-bash" data-lang="python">parent_dir = "C:\\Users\\arnau\\OneDrive\\Documentos\\"</code><br><br>
+
+
 <h3>Author:</h3>
 Arnaud ROUDIERE
 <br><br>
