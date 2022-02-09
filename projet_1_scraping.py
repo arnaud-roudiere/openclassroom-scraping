@@ -9,6 +9,8 @@ Created on Fri Feb  4 15:08:02 2022
 from bs4 import BeautifulSoup
 import requests
 import csv
+import os
+import urllib.request
 
 #On stocke les genres et leurs liens respectifs dans 2 listes 
 liste_liens            =  []
@@ -26,8 +28,27 @@ for link in soup.find_all('a'):
         link = (link.split("/", 3)[3]).split("_", 1)[0]
         liste_genres.append(str(link).capitalize())
 
-# On itère par genre pour créer un fichier CSV pour chaque genre  
+# On créé le dossier du projet
+directory_main = "@-Project_Webscraping"
+parent_dir = "C:\\Users\\arnau\\OneDrive\\Documentos\\"
+path = os.path.join(parent_dir, directory_main)
+try :
+    os.mkdir(path)
+except:
+    pass
+        
+# On itère par genre pour créer un fichier CSV pour chaque catégorie  
 for genre in liste_genres :
+    
+    # On créé un dossier pour cette catégorie de livre
+    directory = genre
+    parent_dir = "C:\\Users\\arnau\\OneDrive\\Documentos\\@-Project_Webscraping\\"
+    path = os.path.join(parent_dir, directory)
+    try :
+        os.mkdir(path)
+    except :
+        pass
+
     
     # Définition des variables
     pages_url              =  []
@@ -83,6 +104,20 @@ for genre in liste_genres :
        
         for link in soup.find_all('article'):
             title.append((str(link.find('h3')).split('title=', 1)[1]).split('>', 1)[0])
+            title_book = (str(link.find('h3')).split('title=', 1)[1]).split('>', 1)[0]
+            
+            ## On retire tous les caractères qui ne pas des lettres et des chiffres
+            ## On limite la taille du dossier à 100 caractères
+            title_book = ''.join(e for e in title_book if e.isalnum())[:50]
+            
+            #On créé les dossiers des images qui correspond au titre du livre
+            directory_main = title_book
+            parent_dir = path
+            path_images = os.path.join(parent_dir, directory_main)
+            try :
+                os.mkdir(path_images)
+            except:
+                pass
 
         # on récupère l'url du livre
             addresse_livre = 'http://books.toscrape.com/catalogue/'+ str(link.find('h3')).split('/',3)[3].split('"',1)[0]
@@ -111,8 +146,12 @@ for genre in liste_genres :
             
             review_rating.append((str(soup.find_all(class_='star-rating')).split('rating ',1)[1]).split('">',1)[0])
             
-            image_url.append("https://books.toscrape.com/" + (str(soup.find_all(class_='item active')).split('../',2)[2]).split('"/',1)[0])
-        
+            image_url.append("http://books.toscrape.com/" + (str(soup.find_all(class_='item active')).split('../',2)[2]).split('"/',1)[0])
+            image_url_book = "http://books.toscrape.com/" + (str(soup.find_all(class_='item active')).split('../',2)[2]).split('"/',1)[0]
+            
+            #On enregistre les images dans les dossiers correspondants
+            urllib.request.urlretrieve(image_url_book,path_images + "\\" + title_book + ".jpg") 
+
     
     # On prépare la liste des listes pour contenir les données du CSV
     for j in range(len(image_url)):
@@ -131,8 +170,7 @@ for genre in liste_genres :
         data.append(sub_data)
         
     # On créé un CSV par genre et on y stocke les données    
-    with open( genre +'.csv', 'w', encoding='UTF8', newline='') as f:
+    with open( path + '/' + genre +'.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(data)          
-
