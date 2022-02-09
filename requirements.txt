@@ -6,4 +6,5 @@
 #
 beautifulsoup4==4.10.0           
 requests ==2.27.1        
-python-csv == 0.0.13         
+python-csv == 0.0.13
+urllib3 == 1.24.2
