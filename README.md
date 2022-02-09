@@ -21,8 +21,8 @@ The data is classified into the following variables:
 <br>
 Finally the app will create one CSV file for each book category and also save every book pictures.
 They'll be organized within separated folders as per following:
-<li>CSV files :"/category_X/"</li>
-<li>Pictures :"/category_X/Book_Picture/"</li>
+<li>CSV files :"/Category/"</li>
+<li>Pictures :"/Category/Book_Name/"</li>
 
 
 <h3>Gettings started:</h3>
@@ -44,6 +44,7 @@ python ==3.7.4<br>
 beautifulsoup4 ==4.10.0    <br>       
 requests ==2.27.1   <br>     
 python-csv == 0.0.13 <br>
+urllib3 == 1.24.2 <br>
 <h3>Author:</h3>
 Arnaud ROUDIERE
 <br><br>
