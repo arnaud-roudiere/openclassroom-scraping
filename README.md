@@ -21,8 +21,8 @@ The data is classified into the following variables:
 <br>
 Finally the app will create one CSV file for each book category and also save every book pictures.
 They'll be organized within separated folders as per following:
-<li>CSV files :"/Category/"</li>
-<li>Pictures :"/Category/Book_Name/"</li>
+<li>CSV files :"@-Project_Webscraping/Category/"</li>
+<li>Pictures  :"@-Project_Webscraping/Category/Book_Name/"</li>
 
 
 <h3>Gettings started:</h3>
